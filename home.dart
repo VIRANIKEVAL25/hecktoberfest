@@ -2,10 +2,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:thesecurityman/constants.dart';
-import 'package:thesecurityman/login.dart';
-import 'package:thesecurityman/registerDashboard.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StateflessWidget {
   HomePage({Key key}) : super(key: key);
 
   @override
@@ -20,12 +18,12 @@ class HomePageState extends State<HomePage> {
     var images = ["assets/Customer.jpg","assets/Splash.jpg","assets/business-partner.jpg"];
    
     return Scaffold(
-     /* appBar: AppBar(
+      appBar: AppBar(
         title: Text("The Security Man"),
         backgroundColor: Color(0xFF23408e), //Color(0xFF23408e)
         toolbarHeight: 70,
         //automaticallyImplyLeading: false,
-      ), */
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Center(
@@ -79,7 +77,7 @@ class HomePageState extends State<HomePage> {
                 onPressed: () {
                   navigator.push
                       context,
-                      MaterialPageRoute(builder: (context) => Login(value: images[1],identity: 'Security Man',)));
+                      MaterialPageRoute(builder: (context) => Login(value: images[1],identity: 'The Security Man',)));
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -101,22 +99,13 @@ class HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Login(value: images[2],identity: 'Business Partner',)));
+                      MaterialPageRoute(builder: (context) => Login(value: images[5],identity: 'Partner',)));
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(30))),
                 color: mainColor,//Color(0xFF23408e),
                 child: Text(
-                  "Business Partner",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Hina'),
-                ),
-              ),
-              SizedBox(
-                height: 40,
+                  "Partner"
               ),
               TextButton(
                   onPressed: (){
@@ -125,8 +114,8 @@ class HomePageState extends State<HomePage> {
                   child: Text(
                     "Not Registered!",
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,fontFamily: 'Hina',fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 25,fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline),)
               ),
             ],
