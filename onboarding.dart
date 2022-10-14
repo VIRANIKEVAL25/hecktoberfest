@@ -1,141 +1,250 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:thesecurityman/components/input_container.dart';
 import 'package:thesecurityman/constants.dart';
-import 'package:thesecurityman/contents.dart';
-import 'package:thesecurityman/homepage.dart';
+import 'package:thesecurityman/registerDashboard.dart';
+import 'dashboard.dart';
 
-class Onboarding extends StatefulWidget {
-  Onboarding({Key key}) : super(key: key);
+class Login extends StatefulWidget {
+
+  final String value;
+  final String identity;
+  Login({Key key, this.value, this.identity}) : super(key: key);
 
   @override
-  _OnboardingState createState() => _OnboardingState();
+  LoginState createState() => LoginState(identity);
 }
 
-class _OnboardingState extends State<Onboarding> {
-  int currentIndex = 0;
-  PageController _controller;
+class LoginState extends State<Login> {
 
-  @override
-  void initState() {
-    _controller = PageController(initialPage: 0);
-    super.initState();
+  final TextEditingController email = new TextEditingController();
+  final TextEditingController password = new TextEditingController();
+
+  // firebase authentication
+  final _auth = FirebaseAuth.instance;
+
+  final _formKey = new GlobalKey<FormState>();
+  final String identity;
+  LoginState(this.identity);
+
+  //to enable eye button on password
+  bool _obscureText = true;
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
   }
 
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  Widget emailInput({IconData icon}){
+  return InputContainer(
+      child: TextFormField(
+           cursorColor: Colors.black,
+           keyboardType: TextInputType.text,
+           decoration: InputDecoration(
+             labelText: "Username/Email",
+             icon: Icon(icon,color: mainColor,),
+             border: InputBorder.none,
+             focusedBorder: InputBorder.none,
+             contentPadding: EdgeInsets.only(left: 1,top: 5,right: 15,bottom: 5),
+           ),
+           validator: (String value){
+             if(value.isEmpty) {
+               return 'Username/Email is required';
+             }
+             if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)){
+               return 'Username/Email is not Valid';
+             }
+             return null;
+           },
+           onSaved: (String value){
+             email.text = value;
+           },
+         )
+       );
+}
+  Widget passWordInput({IconData icon}){
+  return InputContainer(
+      child: TextFormField(
+        //keyboardType: TextInputType.visiblePassword,
+           cursorColor: Colors.black,
+           obscureText: _obscureText,
+           decoration: InputDecoration(
+             labelText: "Password",
+             icon: Icon(icon,color: mainColor,),
+             border: InputBorder.none,
+             focusedBorder: InputBorder.none,
+             contentPadding: EdgeInsets.only(left: 1,top: 5,right: 15,bottom: 5),
+           ),
+           validator: (String value){
+             if(value.isEmpty) {
+               return 'Password is required';
+             }
+             if(!RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,15}$").hasMatch(value)){
+               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                   content: Text("Please enter password should be 1) One Capital Letter 2) Special Character 3) One Number 4) Length Should be 6-15:"),
+                   duration: Duration(seconds: 2),
+                   backgroundColor: Color(0xFF23408e),
+                   behavior: SnackBarBehavior.fixed
+               ));
+               return 'Password is too weak';
+             }
+             return null;
+           },
+           onSaved: (String value){
+             password.text = value;
+           },
+         )
+       );
+}
 
-  Container builtDot(int index, BuildContext context) {
-    return Container(
-      height: 12,
-      width: currentIndex == index ? 20 : 10,
-      margin: EdgeInsets.only(right: 5),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: Colors.deepOrange),
+  Widget loginButton(Size size, BuildContext context){
+  return InkWell(
+        onTap: (){
+          if(!_formKey.currentState.validate()){
+            return;
+          }
+          _formKey.currentState.save();
+          signIn(email.text, password.text);
+        },
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          width: size.width * 0.8,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30), color: mainColor),
+          padding: EdgeInsets.symmetric(vertical: 20),
+          alignment: Alignment.center,
+          child: Text(
+            "Login",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+      );
+}
+  Widget registerButton(Size size, BuildContext context){
+  return InkWell(
+        onTap: (){
+          Navigator.push(context,
+          MaterialPageRoute(builder: (context)=> RegisterDashboard()));
+        },
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          width: size.width * 0.8,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30), color: mainColor),
+          padding: EdgeInsets.symmetric(vertical: 20),
+          alignment: Alignment.center,
+          child: Text(
+            "Register",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+      );
+}
+
+  void signIn(String email,String password) async{
+    await _auth
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((uid) => {
+      Navigator.pushAndRemoveUntil(context,
+       MaterialPageRoute(builder: (context)=> Dashboard(identity: identity,username: email,)),
+          (route)=> false),
+      Fluttertoast.showToast(msg: "Login Successful"),
+
+    },).catchError((e){
+          Fluttertoast.showToast(msg: e.toString());
+        }
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("The Security Man"),
-        backgroundColor: mainColor,
-        toolbarHeight: 70,
-      ),
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _controller,
-              itemCount: contents.length,
-              onPageChanged: (int index) {
-                setState(() {
-                  currentIndex = index;
-                });
-              },
-              itemBuilder: (_, i) {
-                return Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Lottie.asset(
-                          contents[i].image,
-                          height: 250,
-                          width: 250
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          contents[i].title,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Hina'
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: Text(
-                                contents[i].description,
-                                textAlign: TextAlign.justify,
-                                style: TextStyle(fontSize: 20, color: Colors.black,fontFamily: 'Hina'),
-                              ),
-                            ))
+    Size size = MediaQuery.of(context).size;
+    double defaultLoggingSize = size.height - (size.height * 0.1);
 
-                      ],
-                    ));
-              },
-            ),
-          ),
-          Container(
-               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  contents.length,
-                      (index) => builtDot(index, context),
+    return Scaffold(
+      body: Stack(
+        children: [
+          //login form
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: size.width,
+              height: defaultLoggingSize,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Text(
+                      "The Security Man",
+                      style: TextStyle(fontSize: 45,fontWeight: FontWeight.bold,color: mainColor,fontFamily: 'Hina'),),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'Logging As ...',
+                      style: TextStyle(
+                        fontSize: 35,
+                        fontFamily: 'Hina',
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Image.asset(
+                      //change of image require
+                      '${widget.value}',
+                      width: 150,
+                      height: 150,
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          emailInput(
+                            icon: Icons.mail,
+                          ),
+                          Stack(
+                            alignment: AlignmentDirectional.centerEnd,
+                            children: [
+                              passWordInput(
+                                  icon: Icons.lock
+                              ),
+                              FlatButton(
+                                  onPressed: _toggle,
+                                  child: new Icon(_obscureText?Icons.visibility:Icons.visibility_off,size: 20,))
+                            ],
+                          ),
+                          Container(
+                           height: 35,
+                           child: TextButton(
+                                   onPressed: (){},
+                                   child: Text('Forgot Password?',style: TextStyle(fontSize: 12),)
+                               ),
+                           ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          loginButton(size,context),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          registerButton(size, context)
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               )
-          ),
-          Container(
-            height: 60,
-            margin: EdgeInsets.all(20),
-            width: double.infinity,
-            child: FlatButton(
-              onPressed: () {
-                if (currentIndex == contents.length - 1) {
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
-                }
-                _controller.nextPage(
-                    duration: Duration(microseconds: 10000),
-                    curve: Curves.bounceIn);
-              },
-              child: Text(
-                currentIndex == contents.length - 1 ? "Continue" : "Next",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-              color: mainColor,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
             ),
-          )
+          ),
         ],
       ),
     );
   }
+
 }
