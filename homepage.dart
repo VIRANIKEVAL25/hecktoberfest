@@ -1,138 +1,19 @@
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:thesecurityman/constants.dart';
-import 'package:thesecurityman/login.dart';
-import 'package:thesecurityman/registerDashboard.dart';
+ <!DOCTYPE html>
+<html>
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+<head>
+  <title>Our Company</title>
+</head>
 
-  @override
-  HomePageState createState() => HomePageState();
-}
+<body>
 
-class HomePageState extends State<HomePage> {
+  <h1>Welcome to Our Company</h1>
+  <h2>Web Site Main Ingredients:</h2>
 
-  @override
-  Widget build(BuildContext context) {
+  <p>Pages (HTML)</p>
+  <p>Style Sheets (CSS)</p>
+  <p>Computer Code (JavaScript)</p>
+  <p>Live Data (Files and Databases)</p>
 
-    var images = ["assets/Customer.jpg","assets/Splash.jpg","assets/business-partner.jpg"];
-   
-    return Scaffold(
-     /* appBar: AppBar(
-        title: Text("The Security Man"),
-        backgroundColor: Color(0xFF23408e), //Color(0xFF23408e)
-        toolbarHeight: 70,
-        //automaticallyImplyLeading: false,
-      ), */
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 100,
-              ),
-              Text(
-                "The Security Man",
-                style: TextStyle(fontSize: 45,fontWeight: FontWeight.bold,color: mainColor,fontFamily: 'Hina'),),
-              SizedBox(
-                height: 40,
-              ),
-              Text(
-                "Login As",
-                style: TextStyle(
-                  fontSize: 35,
-                  fontFamily: 'Hina',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 120),
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Login(value: images[0],identity: 'Customer',)));
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                color: mainColor,
-                child: Text(
-                  "Customer",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Hina'),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 110),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login(value: images[1],identity: 'Security Man',)));
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                color: mainColor,// Color(0xFF195ba5),
-                child: Text(
-                  "Security Man",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Hina'),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 90),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login(value: images[2],identity: 'Business Partner',)));
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                color: mainColor,//Color(0xFF23408e),
-                child: Text(
-                  "Business Partner",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Hina'),
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              TextButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterDashboard()));
-                  },
-                  child: Text(
-                    "Not Registered!",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,fontFamily: 'Hina',fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline),)
-              ),
-            ],
-          ),
-        ),
-      )
-    );
-  }
-}
+</body>
+</html> 
