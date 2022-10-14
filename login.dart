@@ -219,12 +219,7 @@ class LoginState extends State<Login> {
                                   child: new Icon(_obscureText?Icons.visibility:Icons.visibility_off,size: 20,))
                             ],
                           ),
-                          Container(
-                           height: 35,
-                           child: TextButton(
-                                   onPressed: (){},
-                                   child: Text('Forgot Password?',style: TextStyle(fontSize: 12),)
-                               ),
+                         
                            ),
                           SizedBox(
                             height: 5,
